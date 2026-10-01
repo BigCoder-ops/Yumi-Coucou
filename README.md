@@ -122,7 +122,7 @@ If Yumi isn't running, the hook exits immediately: **Claude Code is never blocke
 
 **Error when installing Claude Code hooks (`coucou-hook.exe` not found)**
 
-This means Yumi is looking for the compiled relay hook, but it hasn't been built yet. To fix it:
+This means Yumi is looking for the compiled relay hook in your AppData folder, but it hasn't been built or copied there yet. To fix it:
 
 1. Open PowerShell in the `windows` folder of the repository:
 
@@ -136,9 +136,21 @@ This means Yumi is looking for the compiled relay hook, but it hasn't been built
    cargo build -p coucou-hook --release
 ```
 
-3. Check that Cargo finishes compiling with no red error messages.
+   Check that Cargo finishes compiling with no red error messages.
 
-4. Restart Yumi, then go to **Settings… → Install hooks** again.
+3. Create the missing AppData folder:
+
+```powershell
+   New-Item -ItemType Directory -Force -Path "$env:LOCALAPPDATA\Coucou\bin"
+```
+
+4. Copy the built hook into it:
+
+```powershell
+   Copy-Item -Path "target\release\coucou-hook.exe" -Destination "$env:LOCALAPPDATA\Coucou\bin\"
+```
+
+5. Close Yumi completely and reopen it, then go to **Settings… → Install hooks** again. It should now work without errors.
    
 ## How it works
 
